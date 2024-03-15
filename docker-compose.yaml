@@ -3,7 +3,7 @@ services:
 
   postgres:
     image: postgres:14.2-alpine
-    container_name: roulette_postgres
+    container_name: postgres
     ports:
       - 5432:5432
     volumes:
@@ -20,13 +20,12 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: roulette_pgadmin
     restart: always
     ports:
       - 81:80
     environment:
-      PGADMIN_DEFAULT_EMAIL: roulette@example.com
-      PGADMIN_DEFAULT_PASSWORD: roulette
+      PGADMIN_DEFAULT_EMAIL: nestjs@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
     volumes:
       - ./docker/pgadmin:/var/lib/pgadmin
     depends_on:

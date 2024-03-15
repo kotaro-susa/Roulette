@@ -5,9 +5,13 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { GambitStyle } from './dto/gambitStyle.dto';
 import { BetService } from './bet.service';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUserInfo } from 'src/user/decorator/get-user.decorator';
+import { User } from 'src/entities/user.entity';
 
 // 賭け方は【色】×【数字】で決まる
 
@@ -22,8 +26,10 @@ export class BetController {
     color: string;
   };
   // 賭けられる時間が終了したことを受け取り、乱数を生成する
+
   @Get('placement')
-  getRandomNumber(): {
+  @UseGuards(AuthGuard("jwt"))
+  getRandomNumber(@GetUserInfo() user: User): {
     number: number;
     color: string;
   } {
@@ -34,7 +40,8 @@ export class BetController {
   // 生成された乱数と賭け情報を受け取り、判定ロジックに渡す
   // 複数の賭け情報が配列で渡されるので、1つづ取り出して、ロジックを実行
   @Post('placement')
-  getBet(@Body() gambitStyles: GambitStyle[]) {
+  @UseGuards(AuthGuard('jwt'))
+  getBet(@Body() gambitStyles: GambitStyle[], @GetUserInfo() user: User) {
     const payouts = gambitStyles.map((gambitStyle) => {
       // 色賭け
       if (gambitStyle.type === 'ColorBet') {

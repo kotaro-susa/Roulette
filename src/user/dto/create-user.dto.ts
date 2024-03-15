@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-
+// ユーザー作成時のバリデーションを実装
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()

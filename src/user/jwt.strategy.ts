@@ -15,12 +15,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
-  // リクエストからペイロードを受け取る
+  // リクエストからペイロードを受け取り、ユーザーIDとユーザー名が正しければ返す
   async validate(payload: { id: string; userName: string }): Promise<User> {
     // 該当のユーザーを探す
     const { id, userName } = payload;
     const user = await this.UserRepository.findOne({ id, userName });
     if (user) {
+      console.log(user);
       return user;
     } else {
       throw new UnauthorizedException();

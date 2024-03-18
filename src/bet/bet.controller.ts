@@ -28,7 +28,7 @@ export class BetController {
   // 賭けられる時間が終了したことを受け取り、乱数を生成する
 
   @Get('placement')
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   getRandomNumber(@GetUserInfo() user: User): {
     number: number;
     color: string;
@@ -41,12 +41,12 @@ export class BetController {
   // 複数の賭け情報が配列で渡されるので、1つづ取り出して、ロジックを実行
   @Post('placement')
   @UseGuards(AuthGuard('jwt'))
-  getBet(@Body() gambitStyles: GambitStyle[], @GetUserInfo() user: User) {
+  async getBet(@Body() gambitStyles: GambitStyle[], @GetUserInfo() user: User) {
     const payouts = gambitStyles.map((gambitStyle) => {
       // 色賭け
       if (gambitStyle.type === 'ColorBet') {
         return {
-          id: 'id1',
+          userid: user.id,
           payment: this.BetService.calculateColorpayout(
             gambitStyle.color,
             gambitStyle.stakes,
@@ -57,7 +57,7 @@ export class BetController {
       // 偶数か奇数か
       else if (gambitStyle.type === 'EvenOddBet') {
         return {
-          id: 'id2',
+          userid: user.id,
           payment: this.BetService.calculateEvenOddpayout(
             gambitStyle.number,
             gambitStyle.stakes,
@@ -66,7 +66,7 @@ export class BetController {
         };
       } else if (gambitStyle.type === 'SingleNumberBet') {
         return {
-          id: 'id3',
+          userid: user.id,
           payment: this.BetService.calculateSingleNumberpayout(
             gambitStyle.number,
             gambitStyle.stakes,
@@ -74,8 +74,8 @@ export class BetController {
           ),
         };
       }
-      return '他の賭け';
     });
+    await this.BetService.savePayment(payouts);
     return payouts;
   }
 }

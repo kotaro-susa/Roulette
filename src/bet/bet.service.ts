@@ -5,11 +5,13 @@ import {
   calculateEvenOddpayout,
   generateRandomRouletteResult,
 } from './bettingLogic';
+import { Payment } from 'src/entities/payment.entity';
+import { PaymentRepository } from './payment.repository';
 
 @Injectable()
 export class BetService {
   // クラスを呼び出した時に実装される処理
-  //   constructor() {}
+  constructor(private readonly PaymentRepository: PaymentRepository) {}
 
   // 乱数を生成し、ボールが入る場所を確定
   generateRandomRouletteResult = (): {
@@ -44,5 +46,12 @@ export class BetService {
     LuckeyNumber: number,
   ): number => {
     return betOnSingleNumber(number, stakes, LuckeyNumber);
+  };
+
+  // 賭け結果をDBに保存する
+  savePayment = async (
+    payment: { userid: string; payment: number }[],
+  ): Promise<Payment[]> => {
+    return await this.PaymentRepository.createPayment(payment);
   };
 }

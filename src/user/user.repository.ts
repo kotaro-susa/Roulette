@@ -14,12 +14,12 @@ export class UserRepository extends Repository<User> {
       userName,
       password: hashPassword,
       bankroll,
-      ChipsPurchased: bankroll,
+      chipsPurchased: bankroll,
       totalWinLossAmount: 0,
     });
 
     await this.save(user);
 
-    return user;
+    return Promise.resolve(user);
   }
 }

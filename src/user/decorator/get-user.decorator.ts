@@ -1,9 +1,9 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 
+// リクエストからユーザー情報を取得
 export const GetUserInfo = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    console.log("リクエスト",request.user)
     return request.user
   },
 );

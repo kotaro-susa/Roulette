@@ -7,7 +7,8 @@ import {
 } from './bettingLogic';
 import { Payment } from 'src/entities/payment.entity';
 import { PaymentRepository } from './payment.repository';
-
+// 賭けのロジックに関することのみ記述
+// ユーザーの資金面に関わるところは【】に記述
 @Injectable()
 export class BetService {
   // クラスを呼び出した時に実装される処理
@@ -50,7 +51,7 @@ export class BetService {
 
   // 賭け結果をDBに保存する
   savePayment = async (
-    payment: { userid: string; payment: number }[],
+    payment: { userid: string; bet: number; payment: number }[],
   ): Promise<Payment[]> => {
     return await this.PaymentRepository.createPayment(payment);
   };

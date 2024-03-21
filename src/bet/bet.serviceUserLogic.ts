@@ -21,10 +21,11 @@ export class BetServiceUserLogic {
       payment: number;
     }[],
   ): Promise<User> {
-    console.log('bbb');
     const user = await this.UserRepository.findOne({ id: payouts[0].userid });
     console.log('変更前', user);
+    // 総ベット額を計算
     const allBet = payouts.reduce((total, payout) => total + payout.bet, 0);
+    // 払い戻し金額を計算
     const allPayment = payouts.reduce(
       (total, payout) => total + payout.payment,
       0,

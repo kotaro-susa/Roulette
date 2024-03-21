@@ -83,7 +83,7 @@ export class BetController {
     });
     // ユーザーの賭け情報をDBに保存
     await this.BetService.savePayment(payouts);
-    // 返された情報をベースにユーザーのbankrollとtotalWinLossAmountを更新できていない
+    
     const userData = async (
       payouts: {
         result: { number: number; color: string };
@@ -92,9 +92,8 @@ export class BetController {
         payment: number;
       }[],
     ): Promise<User> => {
-      console.log('aaaa');
       return await this.BetServiceUserLogic.updateUserInfo(payouts);
     };
-    return { userdata: userData, results: payouts };
+    return { userdata: await userData(payouts), results: payouts };
   }
 }

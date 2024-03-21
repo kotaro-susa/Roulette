@@ -5,6 +5,7 @@ import { User } from 'src/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { CredentialsDto } from './dto/credentials.dto';
 import * as bcrypt from 'bcrypt';
+import { Deposit } from './dto/deposit.dto';
 
 @Injectable()
 export class UserService {
@@ -48,5 +49,14 @@ export class UserService {
         'ユーザー名またはパスワードを確認してください',
       );
     }
+  }
+
+  async deposit(deposit: Deposit, userId: string): Promise<User> {
+    const user = await this.userRepository.findOne({ id: userId });
+    // これまでのチップ購入代金を計算
+    user.chipsPurchased = user.chipsPurchased + deposit.bankroll;
+    // ユーザーのバンクロールを更新
+    user.bankroll = user.bankroll + deposit.bankroll;
+    return await this.userRepository.save(user);
   }
 }
